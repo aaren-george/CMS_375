@@ -1,0 +1,90 @@
+-----------------
+| Student Table |
+-----------------
+-------------------------------------------------------------------------------------------------------------
+create table student 
+( student_id number check ( student_id between 1000 and 9999 ),
+ student_name VARCHAR2( 20 ), 
+ student_year char(2) check ( student_year in ('Fr','So','Jr','Sr') ),
+ constraint student_pk primary key (student_id) );
+-------------------------------------------------------------------------------------------------------------
+
+---------------- 
+| Course Table |
+----------------
+-------------------------------------------------------------------------------------------------------------
+ create table course
+ ( course_id number check ( course_id between 0 and 99 ),
+   course_name varchar2(30) not null,
+   constraint course_pk primary key ( course_id ) );
+-------------------------------------------------------------------------------------------------------------
+
+-----------------
+| Section Table |
+-----------------
+-------------------------------------------------------------------------------------------------------------
+create table section
+( section_id number check ( section_id between 501 and 999 ),
+  course_id number, 
+  section_number number check ( section_number between 1 and 10 ),
+  semester varchar2(6) check ( semester in ( 'Fall', 'Spring', 'Summer' ) ),
+  constraint section_pk PRIMARY key ( section_id),
+  constraint section_fk foreign key ( course_id ) references course ( course_id ) );
+-------------------------------------------------------------------------------------------------------------
+
+----------------------
+| Registration Table |
+----------------------
+-------------------------------------------------------------------------------------------------------------
+create table registration
+( student_id number,
+  section_id number,
+  constraint registration_pk primary key ( student_id, section_id ),
+  constraint registration_fk1 foreign key ( student_id )
+             REFERENCES student ( student_id ),
+  constraint registration_fk2 foreign key ( section_id )
+             REFERENCES section ( section_id ) );
+-------------------------------------------------------------------------------------------------------------
+
+
+-----------------
+| Faculty Table |
+----------------- 
+-------------------------------------------------------------------------------------------------------------
+create table faculty 
+( faculty_id number check ( faculty_id between 100 and 500 ),
+  faculty_name varchar2( 20 ),
+  constraint faculty_pk primary key ( faculty_id ) );
+
+-------------------------------------------------------------------------------------------------------------
+
+--------------------
+| Assignment Table |
+--------------------
+-------------------------------------------------------------------------------------------------------------
+create table assignment
+( faculty_id number,
+  section_id number,
+  constraint assignment_pk primary key ( faculty_id, section_id ),
+  constraint assignment_fk1 foreign key ( faculty_id )
+             REFERENCES faculty ( faculty_id ),
+  constraint assignment_fk2 foreign key ( section_id )
+             REFERENCES section ( section_id ) );
+-------------------------------------------------------------------------------------------------------------
+
+-----------------------
+| Qualification Table |
+-----------------------
+-------------------------------------------------------------------------------------------------------------
+create table qualification
+( course_id number,
+  faculty_id number,
+  date_qualified date,
+  constraint qualification_pk primary key ( course_id, faculty_id ),
+  constraint qualification_fk1 foreign key ( course_id )
+             REFERENCES course ( course_id ),
+  constraint qualification_fk2 foreign key ( faculty_id )
+             REFERENCES faculty ( faculty_id ) );
+   
+-------------------------------------------------------------------------------------------------------------
+
